@@ -6,23 +6,29 @@
   <title>Tools · Yusuf</title>
   <meta name="description" content="A collection of web tools built by Yusuf — CleanURL, Gimme a Name, JSON Formatter and more." />
 
-  <!-- Favicon: simple indigo dot -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%235b54e6'/%3E%3C/svg%3E" />
+  <!-- Favicon: simple accent dot -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%232a737e'/%3E%3C/svg%3E" />
 
   <!-- Google Fonts: Space Grotesk (geometric, distinctive) + Space Mono for accents -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
+  <!-- Shared brand accent — single source of truth for the accent color.
+       Defines --accent, --accent-hover, --accent-2, --accent-rgb, etc. -->
+  <link rel="stylesheet" href="https://cdn.yusufaw.me/theme.css" />
+
   <style>
     /* ============================================================
        DESIGN TOKENS — tweak everything from here
        ============================================================ */
     :root {
-      /* Brand */
-      --accent:        #5b54e6;   /* primary indigo */
-      --accent-soft:   #4a43d4;   /* deeper indigo for text/hover on light */
-      --accent-glow:   rgba(91, 84, 230, 0.28);
+      /* Brand — pulled from the shared theme (cdn.yusufaw.me/theme.css).
+         --accent itself is intentionally NOT redeclared here so the theme
+         remains the single source of truth. Fallbacks degrade gracefully
+         if the CDN is ever unreachable. */
+      --accent-strong: var(--accent-hover, #235f69);                 /* deeper accent for text/hover */
+      --accent-glow:   rgba(var(--accent-rgb, 42, 115, 126), 0.28);  /* hover glow */
 
       /* Surfaces — soft, airy light */
       --bg:            #f5f6fb;   /* page background */
@@ -30,7 +36,7 @@
       --surface:       rgba(255, 255, 255, 0.75);   /* card base */
       --surface-hover: rgba(255, 255, 255, 0.95);
       --border:        rgba(18, 20, 46, 0.08);
-      --border-hover:  rgba(91, 84, 230, 0.5);
+      --border-hover:  rgba(var(--accent-rgb, 42, 115, 126), 0.5);
 
       /* Text */
       --text:          #1a1c2e;
@@ -69,7 +75,7 @@
 
     /* ============================================================
        ANIMATED BACKGROUND
-       Layered: radial indigo glows + a slowly drifting dot grid +
+       Layered: radial accent glows + a slowly drifting dot grid +
        a particle canvas painted by JS.
        ============================================================ */
     .bg-layer {
@@ -77,8 +83,8 @@
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(900px 600px at 15% -10%, rgba(91, 84, 230, 0.16), transparent 60%),
-        radial-gradient(800px 700px at 95% 10%, rgba(91, 84, 230, 0.10), transparent 55%),
+        radial-gradient(900px 600px at 15% -10%, rgba(var(--accent-rgb, 42, 115, 126), 0.16), transparent 60%),
+        radial-gradient(800px 700px at 95% 10%, rgba(var(--accent-rgb, 42, 115, 126), 0.10), transparent 55%),
         linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
     }
 
@@ -133,7 +139,7 @@
       font-size: 0.78rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--accent-soft);
+      color: var(--accent-strong);
       padding: 7px 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
@@ -145,7 +151,7 @@
     .eyebrow .dot {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: var(--accent-soft);
+      background: var(--accent-strong);
       box-shadow: 0 0 10px var(--accent-glow);
       animation: pulse 2.4s ease-in-out infinite;
     }
@@ -162,7 +168,7 @@
       margin-bottom: 20px;
     }
     .hero h1 .grad {
-      background: linear-gradient(110deg, var(--accent), #8b86f5 55%, var(--accent-soft));
+      background: linear-gradient(110deg, var(--accent, #2a737e), var(--accent-2, #4f9aa6) 55%, var(--accent-strong));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -232,7 +238,7 @@
       background: var(--surface-hover);
       box-shadow:
         0 18px 50px -22px var(--accent-glow),
-        0 0 0 1px rgba(125, 119, 240, 0.12) inset;
+        0 0 0 1px rgba(var(--accent-rgb, 42, 115, 126), 0.12) inset;
     }
     .card:hover::before { opacity: 1; }
 
@@ -249,9 +255,9 @@
       display: grid;
       place-items: center;
       border-radius: 13px;
-      background: linear-gradient(145deg, rgba(91, 84, 230, 0.28), rgba(91, 84, 230, 0.08));
-      border: 1px solid rgba(125, 119, 240, 0.3);
-      color: var(--accent-soft);
+      background: linear-gradient(145deg, rgba(var(--accent-rgb, 42, 115, 126), 0.24), var(--accent-soft, #e2eef0));
+      border: 1px solid var(--accent-border, #c2dbdf);
+      color: var(--accent-strong);
       flex-shrink: 0;
     }
     .icon svg { width: 22px; height: 22px; }
@@ -261,11 +267,11 @@
       font-size: 0.68rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent-soft);
+      color: var(--accent-strong);
       padding: 5px 11px;
       border-radius: var(--radius-sm);
-      background: rgba(91, 84, 230, 0.12);
-      border: 1px solid rgba(125, 119, 240, 0.22);
+      background: var(--accent-soft, #e2eef0);
+      border: 1px solid var(--accent-border, #c2dbdf);
       white-space: nowrap;
     }
 
@@ -299,8 +305,8 @@
     }
     .open .arrow { transition: transform 0.3s var(--ease); }
     .card:hover .open {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--accent, #2a737e);
+      border-color: var(--accent, #2a737e);
       color: #fff;
       box-shadow: 0 8px 24px -8px var(--accent-glow);
     }
@@ -316,7 +322,8 @@
       color: var(--text-faint);
       font-size: 0.9rem;
     }
-    footer span.heart { color: var(--accent-soft); }
+    footer a.heart { color: var(--accent-strong); }
+    footer a.heart:hover { text-decoration: underline; }
 
     /* ============================================================
        RESPONSIVE — down to 375px
@@ -363,7 +370,7 @@
 
   <!-- FOOTER -->
   <footer>
-    Built by <span class="heart">Yusuf</span> · <span id="year"></span>
+    Built by <a class="heart" href="https://yusufaw.me" target="_blank" rel="noopener noreferrer">Yusuf</a> · <span id="year"></span>
   </footer>
 
   <script>
@@ -442,6 +449,9 @@
 
       const canvas = document.getElementById('particles');
       const ctx = canvas.getContext('2d');
+      const accentRgb = getComputedStyle(document.documentElement)
+        .getPropertyValue('--accent-rgb')
+        .trim() || '42, 115, 126';
       let w, h, dpr, dots;
 
       function resize() {
@@ -475,7 +485,7 @@
           // draw dot
           ctx.beginPath();
           ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(91, 84, 230, 0.5)';
+          ctx.fillStyle = `rgba(${accentRgb}, 0.5)`;
           ctx.fill();
 
           // connect to nearby dots
@@ -487,7 +497,7 @@
               ctx.beginPath();
               ctx.moveTo(d.x, d.y);
               ctx.lineTo(o.x, o.y);
-              ctx.strokeStyle = `rgba(91, 84, 230, ${0.22 * (1 - dist / linkDist)})`;
+              ctx.strokeStyle = `rgba(${accentRgb}, ${0.22 * (1 - dist / linkDist)})`;
               ctx.lineWidth = dpr;
               ctx.stroke();
             }
